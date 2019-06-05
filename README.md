@@ -22,7 +22,7 @@ $ export GITHUB_USERNAME=<имя_пользователя>
 ```ShellSession
 $ cd ${GITHUB_USERNAME}/workspace
 $ pushd .
-~/Ais105/workspace ~/Ais105/workspace
+~/Ais105/workspace 
 $ source scripts/activate
 ```
 Копируем в локальной репризиторий **lab02** c **github**.com в папку **lab03**
