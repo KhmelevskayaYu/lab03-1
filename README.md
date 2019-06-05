@@ -21,6 +21,7 @@ $ export GITHUB_USERNAME=<имя_пользователя>
 Переходим в рабочий каталог
 ```ShellSession
 $ cd ${GITHUB_USERNAME}/workspace
+#Положить текущую директорию в стек, чтобы позже вернуться к ней с помощью popd
 $ pushd .
 ~/Ais105/workspace 
 $ source scripts/activate
@@ -29,7 +30,9 @@ $ source scripts/activate
 ```ShellSession
 $ git clone https://github.com/${GITHUB_USERNAME}/lab02.git projects/lab03
 $ cd projects/lab03
+#Удвлить все ветки удаленного отслеживания удаляются
 $ git remote remove origin
+#Подключение локального репозитория к удаленному серверу
 $ git remote add origin https://github.com/${GITHUB_USERNAME}/lab03.git
 ```
 
