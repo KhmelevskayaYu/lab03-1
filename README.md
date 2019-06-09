@@ -16,7 +16,7 @@ $ open https://cmake.org/
 ## Tutorial
 
 ```ShellSession
-$ export GITHUB_USERNAME=<имя_пользователя>
+$ export GITHUB_USERNAME=Ais105
 ```
 Переходим в рабочий каталог
 ```ShellSession
