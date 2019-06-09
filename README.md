@@ -37,28 +37,38 @@ $ git remote add origin https://github.com/${GITHUB_USERNAME}/lab03.git
 ```
 
 ```ShellSession
+# Компиляция исходного файла со стандартом С++ 2011 года и создание объектного файла
 $ g++ -std=c++11 -I./include -c sources/print.cpp
+# Проверка существования файла print.o
 $ ls print.o
 print.o
+# Печать таблицы имен объектного файла, содержащих в тексте комбинацию print
 $ nm print.o | grep print
 0000000000000098 t _GLOBAL__sub_I__Z5printRKSsRSo
 0000000000000000 T _Z5printRKSsRSo
 0000000000000027 T _Z5printRKSsRSt14basic_ofstreamIcSt11char_traitsIcEE
+# Cоздание файла с расширением *.a (файл статистической библиотеки)
 $ ar rvs print.a print.o
 ar: создаётся print.a
 a - print.o
+# Отображение типа файла
 $ file print.a
 print.a: current ar archive
 $ g++ -std=c++11 -I./include -c examples/example1.cpp
+# Проверка существования файла example1.o
 $ ls example1.o
 example1.o
+# Компоновка исходных файлов example1.o и print.a в исполняемый файл с именем example1
 $ g++ example1.o print.a -o example1
+# Запуск исполяемого файла и отображение результата работы 
 $ ./example1 && echo
 hello
 ```
 
 ```ShellSession
+# Компиляция исходного файла со стандартом С++ 2011 года и создание объектного файла
 $ g++ -std=c++11 -I./include -c examples/example2.cpp
+# Печать таблицы имен объектного файла
 $ nm example2.o
 0000000000000000 b .bss
 0000000000000000 d .ctors
@@ -96,7 +106,9 @@ $ nm example2.o
 0000000000000000 T _ZStorSt13_Ios_OpenmodeS_
 0000000000000000 T main
 $ g++ example2.o print.a -o example2
+# Запуск исполяемого файла (вывод сообщения в файл log.txt)
 $ ./example2
+# Отображение результата работы 
 $ cat log.txt && echo
 hello
 ```
@@ -109,6 +121,7 @@ $ rm -rf log.txt
 ```
 
 ```ShellSession
+#Создание файла CMakeLists.txt. Указание номера версии cmake.
 $ cat > CMakeLists.txt <<EOF
 cmake_minimum_required(VERSION 3.4)
 project(print)
@@ -116,6 +129,7 @@ EOF
 ```
 
 ```ShellSession
+#Установка стандарта языка С++ и включение требований стандарта
 $ cat >> CMakeLists.txt <<EOF
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -123,26 +137,31 @@ EOF
 ```
 
 ```ShellSession
+#Сборка статистической библиотеки print с исходником print.cpp.
 $ cat >> CMakeLists.txt <<EOF
 add_library(print STATIC \${CMAKE_CURRENT_SOURCE_DIR}/sources/print.cpp)
 EOF
 ```
 
 ```ShellSession
+#Добавление директории с хедерами библиотеки print для поиска в них хедеров
 $ cat >> CMakeLists.txt <<EOF
 include_directories(\${CMAKE_CURRENT_SOURCE_DIR}/include)
 EOF
 ```
 
 ```ShellSession
+# Создание директории с исполняемым файлом cmake
 $ cmake -H. -B_build
 ...
 --Build files have been written to: /home/lol/Ais105/workspace/projects/lab03/_build
+# Сборка директории _build с исплняемыми файлами CMake
 $ cmake --build _build
 Built target print
 ```
 
 ```ShellSession
+#Добавление исполняемых файлов в соответствующие исходные проекты
 $ cat >> CMakeLists.txt <<EOF
 
 add_executable(example1 \${CMAKE_CURRENT_SOURCE_DIR}/examples/example1.cpp)
@@ -151,16 +170,18 @@ EOF
 ```
 
 ```ShellSession
+#Линковка проектов со статистической библиотекой print
 $ cat >> CMakeLists.txt <<EOF
 
 target_link_libraries(example1 print)
 target_link_libraries(example2 print)
 EOF
 ```
-
+Сборка файла _build
 ```ShellSession
 $ cmake --build _build
 Built target print
+# Сборка директории _build для проекта print
 $ cmake --build _build --target print
 Built target print
 $ cmake --build _build --target example1
@@ -169,28 +190,41 @@ $ cmake --build _build --target example2
 Built target example2
 ```
 
+Запуск исполняемых файлов example1 и example2
 ```ShellSession
+# Проверка существования файла libprint.a и вывод информации о нём
 $ ls -la _build/libprint.a
 -rw-r--r-- 1 lol lol 2498 мар 30 22:08 _build/libprint.a
+# Запуск example1 и вывод результата работы на экран
 $ _build/example1 && echo
 hello
+# Запуск исполяемого файла (вывод сообщения в файл log.txt)
 $ _build/example2
+# Отображение результата работы 
 $ cat log.txt && echo
 hello
+# Удаление результата работы файла example2 (файла log.txt)
 $ rm -rf log.txt
 ```
-
+Работа с файлом CMakeLists.txt из удаленного репозитория
 ```ShellSession
+# Клонирование удаленного репозитория в директорию
 $ git clone https://github.com/tp-labs/lab03 tmp
+# Перемещение файла CMakeLists.txt в текущий каталог
 $ mv -f tmp/CMakeLists.txt .
+# Удаление каталога tmp
 $ rm -rf tmp
 ```
-
+Сборка файла CMakeLists.txt
 ```ShellSession
+# Просмотр содержимого файла CMakeLists.txt
 $ cat CMakeLists.txt
+# Создание директории с исполняемым файлом cmake и указание каталога установки.
 $ cmake -H. -B_build -DCMAKE_INSTALL_PREFIX=_install
 -- Build files have been written to: /home/lol/Ais105/workspace/projects/lab03/_build
+# Сборка файла _build в директорию install
 $ cmake --build _build --target install
+# Вывод содержимого каталога _install в виде дерева
 $ tree _install
 _install
 ├── cmake
@@ -203,7 +237,7 @@ _install
 
 3 directories, 4 files
 ```
-
+Запись изменений в репозиторий
 ```ShellSession
 $ git add CMakeLists.txt
 $ git commit -m"added CMakeLists.txt"
